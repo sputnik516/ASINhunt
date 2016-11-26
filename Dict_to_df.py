@@ -1,6 +1,10 @@
+# By Alex Lazurka
+# Methods below take in a Dict response from 'dict_to_df' method in
+# MWSPy3.py, and return the response in a Pandas DataFrame format.
+# Data can then be easily loaded to a database, or anything else
+
 import pandas as pd
 
-# -Added by Alex:
 def GetServiceStatusResult(parsed_data):
 
     df = pd.DataFrame(columns=['Status', 'Timestamp'], index=[0])
