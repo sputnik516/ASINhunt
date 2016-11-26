@@ -2,6 +2,8 @@
 # Methods below take in a Dict response from 'dict_to_df' method in
 # MWSPy3.py, and return the response in a Pandas DataFrame format.
 # Data can then be easily loaded to a database, or anything else
+# Amazon API responses vary depending on what data is available
+# for an item, and these methods handle these variations
 
 import pandas as pd
 
@@ -77,23 +79,23 @@ def GetMatchingProductForIdResult(parsed_data):
                 try:
                     df_multi.set_value(n, 'PkgHeight', subItem.AttributeSets.ItemAttributes.PackageDimensions.Height.value)
                 except KeyError:
-                    df_multi.set_value(n, 'PkgHeight', '')
+                    pass
                 try:
                     df_multi.set_value(n, 'PkgWidth', subItem.AttributeSets.ItemAttributes.PackageDimensions.Width.value)
                 except KeyError:
-                    df_multi.set_value(n, 'PkgWidth', '')
+                    pass
                 try:
                     df_multi.set_value(n, 'PkgLength', subItem.AttributeSets.ItemAttributes.PackageDimensions.Length.value)
                 except KeyError:
-                    df_multi.set_value(n, 'PkgLength', '')
+                    pass
                 try:
                     df_multi.set_value(n, 'PkgWeight', subItem.AttributeSets.ItemAttributes.PackageDimensions.Weight.value)
                 except KeyError:
-                    df_multi.set_value(n, 'PkgWeight', '')
+                    pass
                 try:
                     df_multi.set_value(n, 'PackageQuantity', subItem.AttributeSets.ItemAttributes.PackageQuantity)
                 except KeyError:
-                    df_multi.set_value(n, 'PackageQuantity', '')
+                    pass
 
         # Items that were NOT found by Amazon:
         elif item.status == 'ClientError':

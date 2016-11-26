@@ -3,6 +3,7 @@ import mwsPy3 as mws
 import Creds as c
 import time
 
+# Sample lists of UPC codes and Amazon ASIN's for testing purposes:
 upc_list = ('645397057123', # generates 2 responses
              '645397058120',
              '812028011377',
@@ -70,6 +71,7 @@ class ASINHunt(object):
             resp = self.con_products.get_lowest_priced_offers_for_asin(marketplaceid, ids, condition)
             df_final = resp.dict_to_df()
 
+        # If value passed is not a tuple, list, or str:
         else:
             raise ValueError('List of ASINs is not a \'tuple\', \'list\' or \'str\'')
 
@@ -78,7 +80,7 @@ class ASINHunt(object):
 
 a = ASINHunt(access_key=c.aws_key, secret_key=c.s_key, account_id=c.sellerID)
 # s = a.match_products_for_id(c.marketplaceID_US, 'UPC', ids=upc_list2)
-s = a.get_lowest_priced_offers_for_asin(c.marketplaceID_US, asin_list, 'New')
+# s = a.get_lowest_priced_offers_for_asin(c.marketplaceID_US, asin_list, 'New')
 
 print(s)
 s.to_csv('test.csv')
