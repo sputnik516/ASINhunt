@@ -1,6 +1,5 @@
 import pandas as pd
-# import mws                # for Python 2.x
-import mwsPy3 as mws        # for Python 3.x
+import mwsPy3 as mws
 import Creds as c
 import time
 
@@ -20,10 +19,7 @@ upc_list2 = ('812028011377',
 upc_list3 = ('0712536746061', '645397929628', '33', '812028011377', '729294825501',#generates 1 response
             '645397057123', '0')  # generates 2 responses
 
-asin_tuple = ('B004PRKD4W',
-              'B0063IV52U',
-              'B001GTT9TW',
-              'B00LOCX74O')
+asin_list = ('B004PRKD4W','B0063IV52U','B001GTT9TW','B00LOCX74O','B00LPDAA10','B006JWWE6Q','B006CPUY3K','B00LB46AEY')
 
 upc_list4 = ('856097000757', '0712536746061', '645397929628', '33', '812028011377', '715757330804', '729294825501',
              '729294366806', '899126000854', '601209051482')
@@ -58,18 +54,34 @@ class ASINHunt(object):
 
         return df_final
 
-    def get_lowest_priced_offers_for_asin(self, marketplaceid, asin, condition):
-        resp = self.con_products.get_lowest_priced_offers_for_asin(marketplaceid, asin, condition)
+    def get_lowest_priced_offers_for_asin(self, marketplaceid, ids, condition):
 
-        return resp.dict_to_df()
+        df_final = pd.DataFrame()
+
+        # If > 1 ASIN passed:
+        if isinstance(ids, (list, tuple)):
+            for item in ids:
+                resp = self.con_products.get_lowest_priced_offers_for_asin(marketplaceid, item, condition)
+                df = resp.dict_to_df()
+                df_final = df_final.append(df, ignore_index=True)
+
+        # If 1 ASIN passed:
+        elif isinstance(ids, str):
+            resp = self.con_products.get_lowest_priced_offers_for_asin(marketplaceid, ids, condition)
+            df_final = resp.dict_to_df()
+
+        else:
+            raise ValueError('List of ASINs is not a \'tuple\', \'list\' or \'str\'')
+
+        return df_final
 
 
 a = ASINHunt(access_key=c.aws_key, secret_key=c.s_key, account_id=c.sellerID)
-#s = a.match_products_for_id(c.marketplaceID_US, 'UPC', ids=upc_list2)
-s = a.get_lowest_priced_offers_for_asin(c.marketplaceID_US, 'B00LOCX74O', 'New')
+# s = a.match_products_for_id(c.marketplaceID_US, 'UPC', ids=upc_list2)
+s = a.get_lowest_priced_offers_for_asin(c.marketplaceID_US, asin_list, 'New')
 
 print(s)
-#s.to_csv('test.csv')
+s.to_csv('test.csv')
 
 
 
